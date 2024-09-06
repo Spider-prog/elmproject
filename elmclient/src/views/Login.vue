@@ -13,7 +13,7 @@
 					手机号码：
 				</div>
 				<div class="content">
-					<input type="text" v-model="userId" placeholder="手机号码">
+					<input type="text" v-model="userId" placeholder="手机号码">  <!--表单提交用v-model实现双向数据绑定-->
 				</div>
 			</li>
 			<li>
@@ -46,33 +46,32 @@
 		data(){
 			return {
 				userId:'',
-				password:''
+				password:''//传入两个字符串类型
 			}
 		},
 		methods:{
 			login(){
+				//表单验证，手机号码和密码不能为空
 				if(this.userId==''){
-					alert('手机号码不能为空！');
+					alert('手机号码不能为空！');//alert()方法是显示一条弹出提示消息和确认按钮的警告框
 					return;
 				}
 				if(this.password==''){
 					alert('密码不能为空！');
 					return;
 				}
-				
 				//登录请求
 				this.$axios.post('UserController/getUserByIdByPass',this.$qs.stringify({
 					userId:this.userId,
 					password:this.password
 				})).then(response=>{
 					let user = response.data;
-					if(user==null){
+					if(user==null){//查询完看是否返回了user对象
 						alert('用户名或密码不正确！');
 					}else{
-						//sessionstorage有容量限制，为了防止数据溢出，所以不将userImg数据放入session中
-						user.userImg = '';
-						this.$setSessionStorage('user',user);
-						this.$router.go(-1);
+						user.userImg = '';//sessionstorage有容量限制，为了防止数据溢出将Img置空
+						this.$setSessionStorage('user',user);//将键值对放进sessionstorage中
+						this.$router.go(-1);//从哪来回哪去，回退到上一个页面（这个功能很棒）
 					}
 				}).catch(error=>{
 					console.error(error);

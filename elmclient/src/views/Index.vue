@@ -1,4 +1,5 @@
 <template>
+	<!-- 总容器 -->
 	<div class="wrapper">
 		<!-- header部分 -->
 		<header>
@@ -9,10 +10,8 @@
 		</header>
 
 		<!-- search部分 -->
-		<!-- 
-			搜索框部分（此块与search-fixed-top块宽度高度一致，用于当
-			search-fixed-top块固定后，挡住下面块不要窜上去） 
-				-->
+		<!-- 搜索框部分（此块与search-fixed-top块宽度高度一致，
+		用于当search-fixed-top块固定后，挡住下面块不要窜上去）-->
 		<div class="search">
 			<!-- 当滚动条超过上面的定位块时，search-fixed-top块变成固定在顶部。 -->
 			<div class="search-fixed-top" ref="fixedBox">
@@ -330,10 +329,11 @@
 			</li>
 		</ul>
 
-		<!-- 底部菜单部分 -->
+		<!-- 底部菜单部分 很多页面都有的部分，视为共通组件-->
 		<Footer></Footer>
 	</div>
 </template>
+
 <script>
 	//导入共通组件
 	import Footer from '../components/Footer.vue';
@@ -348,10 +348,9 @@
 				let scroll = s1 == 0 ? s2 : s1;
 				//获取视口宽度
 				let width = document.documentElement.clientWidth;
-				
 				//获取顶部固定块
+				//let search = document.getElementById('fixedBox');
 				let search = this.$refs.fixedBox;
-				
 				//判断滚动条超过视口宽度的12%时，搜索块变固定定位
 				if (scroll > width * 0.12) {
 					search.style.position = 'fixed';
@@ -364,6 +363,7 @@
 		},
 		unmounted() {
 			//当切换到其他组件时，就不需要document滚动条事件，所以将此事件去掉
+			//必要的，要注意vue的单页面，挂载在一个页面中，document作用于全局上
 			document.onscroll = null;
 		},
 		destroyed() {
@@ -382,6 +382,7 @@
 </script>
 
 <style scoped>
+	/*scoped属性表示该样式私有，只对当前组件有效*/
 	/****************** 总容器 ******************/
 	.wrapper {
 		width: 100%;

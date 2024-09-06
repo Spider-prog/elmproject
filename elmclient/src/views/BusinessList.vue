@@ -11,7 +11,7 @@
 			<li v-for="item in businessArr" @click="toBusinessInfo(item.businessId)">
 				<div class="business-img">
 					<img :src="item.businessImg">
-					<div class="business-img-quantity" v-show="item.quantity>0">{{item.quantity}}</div>
+					<div class="business-img-quantity" v-show="item.quantity>0">{{item.quantity}}</div><!--右上角小红标-->
 				</div>
 				<div class="business-info">
 					<h3>{{item.businessName}}</h3>
@@ -34,24 +34,23 @@
 		name:'BusinessList',
 		data(){
 			return {
-				orderTypeId: this.$route.query.orderTypeId,
-				businessArr:[],
+				orderTypeId: this.$route.query.orderTypeId,//获取主页传来的参数
+				businessArr:[],//数组类型
 				user:{}
 			}
 		},
 		created() {
 			this.user = this.$getSessionStorage('user');
 			
-			//根据orderTypeId查询商家信息
+			//根据orderTypeId查询商家信息，第一个填接口，第二个填请求参数，将JSON格式的键值对转换成qs传给服务器
 			this.$axios.post('BusinessController/listBusinessByOrderTypeId',this.$qs.stringify({
 				orderTypeId:this.orderTypeId
-			})).then(response=>{
+			})).then(response=>{//响应成功
 				this.businessArr = response.data;
-				//判断是否登录
-				if(this.user!=null){
+				if(this.user!=null){//判断是否登录
 					this.listCart();
 				}
-			}).catch(error=>{
+			}).catch(error=>{//响应失败
 				console.error(error);
 			});
 		},
@@ -78,7 +77,7 @@
 					console.error(error);
 				});
 			},
-			toBusinessInfo(businessId){
+			toBusinessInfo(businessId){//跳转商家详细页面
 				this.$router.push({path:'/businessInfo',query:{businessId:businessId}});
 			}
 		}

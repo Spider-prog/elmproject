@@ -8,7 +8,7 @@
 				
 				<!-- 商家logo部分 -->
 				<div class="business-logo">
-					<img :src="business.businessImg">
+					<img :src="business.businessImg"> <!--动态绑定图片-->
 				</div>
 				
 				<!-- 商家信息部分 -->
@@ -20,7 +20,7 @@
 				
 				<!-- 食品列表部分 -->
 				<ul class="food">
-					<li v-for="(item,index) in foodArr">
+					<li v-for="(item,index) in foodArr"> <!--遍历附带索引便于之后选定食品-->
 						<div class="food-left">
 							<img :src="item.foodImg">
 							<div class="food-left-info">
@@ -31,9 +31,9 @@
 						</div>
 						<div class="food-right">
 							<div>
-								<i class="fa fa-minus-circle" @click="minus(index)" v-show="item.quantity!=0"></i>
+								<i class="fa fa-minus-circle" @click="minus(index)" v-show="item.quantity!=0"></i><!--v-show指令通过改变元素的css属性来决定元素是显示还是隐藏-->
 							</div>
-							<p><span v-show="item.quantity!=0">{{item.quantity}}</span></p>
+							<p><span v-show="item.quantity!=0">{{item.quantity}}</span></p><!--内连元素-->
 							<div>
 								<i class="fa fa-plus-circle" @click="add(index)"></i>
 							</div>
@@ -73,14 +73,14 @@
 		name:'BusinessInfo',
 		data(){
 			return {
-				businessId: this.$route.query.businessId,
-				business:{},
-				foodArr:[],
-				user:{}
+				businessId: this.$route.query.businessId,//从BusinessList组件传入id值
+				business:{},//返回一个business对象
+				foodArr:[],//食品数组
+				user:{}//添加用户对象
 			}
 		},
 		created() {
-			this.user = this.$getSessionStorage('user');
+			this.user = this.$getSessionStorage('user');//从sessionStorage中获取user对象
 			
 			//根据businessId查询商家信息
 			this.$axios.post('BusinessController/getBusinessById',this.$qs.stringify({
@@ -96,10 +96,9 @@
 				businessId:this.businessId
 			})).then(response=>{
 				this.foodArr = response.data;
-				for(let i=0;i<this.foodArr.length;i++){
+				for(let i=0;i<this.foodArr.length;i++){//为每个食品添加数量属性，初始赋为0
 					this.foodArr[i].quantity=0;
 				}
-				
 				//如果已登录，那么需要去查询购物车中是否已经选购了某个食品
 				if(this.user!=null){
 					this.listCart();
@@ -129,46 +128,38 @@
 					console.error(error);
 				});
 			},
-			add(index){
-				//首先做登录验证
-				if(this.user==null){
-					this.$router.push({path:'/login'});
-					return;
+			add(index){//食品数量加1，传过来index指定某个食品
+				//首先做登录验证（很重要）
+				if(this.user==null){//根据user对象是否为空判断是否登录
+					this.$router.push({path:'/login'});//如果未登录强制路由到登录组件
+					return;//接着之后直接退出
 				}
-				
-				if(this.foodArr[index].quantity==0){
-					//做insert
+				if(this.foodArr[index].quantity==0){//如果开始数量为0做insert
 					this.savaCart(index);
-				}else{
-					//做update
+				}else{//否则如果开始数量不为0做update
 					this.updateCart(index,1);
 				}
 			},
-			minus(index){
-				//首先做登录验证
+			minus(index){//食品数量减1
 				if(this.user==null){
 					this.$router.push({path:'/login'});
 					return;
 				}
-				
-				if(this.foodArr[index].quantity>1){
-					//做update
+				if(this.foodArr[index].quantity>1){//如果开始数量大于1个做update
 					this.updateCart(index,-1);
-				}else{
-					//做delete
+				}else{//否则如果开始数量为1个做remove
 					this.removeCart(index);
 				}
 			},
-			savaCart(index){
+			savaCart(index){//向购物车表中添加一条记录
 				this.$axios.post('CartController/saveCart',this.$qs.stringify({
 					businessId:this.businessId,
 					userId:this.user.userId,
 					foodId:this.foodArr[index].foodId
 				})).then(response=>{
-					if(response.data==1){
-						//此食品数量要更新为1；
-						this.foodArr[index].quantity=1;
-						this.foodArr.sort();
+					if(response.data==1){//当后端响应成功才更新前端数据
+						this.foodArr[index].quantity=1;//此食品数量要更新为1
+						this.foodArr.sort();//调用sort监听方法目标在于让vue监听到数据的变化而非排序
 					}else{
 						alert('向购物车中添加食品失败！');
 					}
@@ -184,8 +175,7 @@
 					quantity:this.foodArr[index].quantity+num
 				})).then(response=>{
 					if(response.data==1){
-						//此食品数量要更新为1或-1；
-						this.foodArr[index].quantity+=num;
+						this.foodArr[index].quantity+=num;//此食品数量要更新为1或-1；
 						this.foodArr.sort();
 					}else{
 						alert('向购物车中更新食品失败！');

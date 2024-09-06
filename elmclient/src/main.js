@@ -17,10 +17,8 @@ import {
 
 
 const app = createApp(App)
-
 const mountedApp = app.use(router);
 mountedApp.mount('#app');
-
 app.config.productionTip = false
 
 //设置axios的基础url部分
