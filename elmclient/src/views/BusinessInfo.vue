@@ -74,10 +74,12 @@
 		name:'BusinessInfo',
 		data(){
 			return {
+				
 				businessId: this.$route.query.businessId,//从BusinessList组件传入id值
 				business:{},//返回一个business对象
 				foodArr:[],//食品数组
 				user:{}//添加用户对象
+			
 			}
 		},
 		created() {
