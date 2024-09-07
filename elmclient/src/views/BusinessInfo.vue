@@ -41,6 +41,7 @@
 					</li>
 				</ul>
 				
+				
 				<!-- 购物车部分 -->
 				<div class="cart">
 					<div class="cart-left">
@@ -100,6 +101,7 @@
 					this.foodArr[i].quantity=0;
 				}
 				//如果已登录，那么需要去查询购物车中是否已经选购了某个食品
+				//该操作是必要的，否则刷新页面前端数据丢失，与后端数据不一致产生问题
 				if(this.user!=null){
 					this.listCart();
 				}
@@ -114,8 +116,7 @@
 					userId:this.user.userId
 				})).then(response=>{
 					let cartArr = response.data;
-					//遍历所有食品列表
-					for(let foodItem of this.foodArr){
+					for(let foodItem of this.foodArr){//遍历所有食品列表
 						foodItem.quantity = 0;
 						for(let cartItem of cartArr){
 							if(cartItem.foodId==foodItem.foodId){
