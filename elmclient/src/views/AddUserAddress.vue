@@ -3,6 +3,7 @@
 
 		<!-- header部分 -->
 		<header>
+			<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
 			<p>新增送货地址</p>
 		</header>
 
@@ -103,6 +104,9 @@
 					console.error(error);
 				});
 			}
+		},
+		goback(){
+			this.$router.go(-1);
 		}
 	}
 </script>
@@ -120,7 +124,7 @@
 		height: 12vw;
 		background-color: #0097FF;
 		display: flex;
-		justify-content: space-around;
+		/*justify-content: space-around;*/
 		align-items: center;
 		color: #fff;
 		font-size: 4.8vw;
@@ -130,7 +134,10 @@
 		/*保证在最上层*/
 		z-index: 1000;
 	}
-
+    
+	.wrapper header .go-back{
+		padding:0 32vw 0 2vw;
+	}
 	/*************** （表单信息） ***************/
 	.wrapper .form-box {
 		width: 100%;

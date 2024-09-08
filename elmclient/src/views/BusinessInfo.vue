@@ -3,6 +3,7 @@
 				
 				<!-- header部分 -->
 				<header>
+					<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
 					<p>商家信息</p>
 				</header>
 				
@@ -74,12 +75,10 @@
 		name:'BusinessInfo',
 		data(){
 			return {
-				
 				businessId: this.$route.query.businessId,//从BusinessList组件传入id值
 				business:{},//返回一个business对象
 				foodArr:[],//食品数组
 				user:{}//添加用户对象
-			
 			}
 		},
 		created() {
@@ -228,6 +227,9 @@
 			//结算总价格
 			totalSettle(){
 				return this.totalPrice+this.business.deliveryPrice;
+			},
+			goback(){
+				this.$router.go(-1);
 			}
 		}
 	}
@@ -254,10 +256,13 @@
 		z-index: 1000;
 		
 		display: flex;
-		justify-content: center;
+		/*justify-content: center;*/
 		align-items: center;
 	}
 	
+	.wrapper header .go-back{
+		padding:0 32vw 0 2vw;
+	}
 	/****************** 商家logo部分 ******************/
 	.wrapper .business-logo{
 		width: 100%;

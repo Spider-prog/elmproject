@@ -3,6 +3,7 @@
 
 		<!-- header部分 -->
 		<header>
+			<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
 			<p>在线支付</p>
 		</header>
 
@@ -89,6 +90,9 @@
 		},
 		components: {
 			Footer
+		},
+		goback(){
+			this.$router.go(-1);
 		}
 	}
 </script>
@@ -114,8 +118,12 @@
 		z-index: 1000;
 
 		display: flex;
-		justify-content: center;
+		/*justify-content: center;*/
 		align-items: center;
+	}
+	
+	.wrapper header .go-back{
+		padding:0 32vw 0 2vw;
 	}
 
 	/****************** 订单信息部分 ******************/

@@ -1,7 +1,7 @@
 <template>
 	<div class="wrapper">
 
-		<!-- header部分 -->
+		<!--header部分-->
 		<header>
 			<p>我的订单</p>
 		</header>
@@ -9,7 +9,8 @@
 		<!-- 订单列表部分 -->
 		<h3>未支付订单信息：</h3>
 		<ul class="order">
-			<li v-for="item in orderArr" v-if="item.orderState==0">
+			<li v-for="item in orderArr">
+			<template v-if="item.orderState==0">
 				<div class="order-info">
 					<p>
 						{{item.business.businessName}}
@@ -17,7 +18,7 @@
 					</p>
 					<div class="order-info-right">
 						<p>&#165;{{item.orderTotal}}</p>
-						<div class="order-info-right-icon">去支付</div>
+						<div class="order-info-right-icon" @click="toPayment(item)">去支付</div>
 					</div>
 				</div>
 				<ul class="order-detailet" v-show="item.isShowDetailet">
@@ -30,12 +31,14 @@
 						<p>&#165;{{item.business.deliveryPrice}}</p>
 					</li>
 				</ul>
+			</template>
 			</li>
 		</ul>
 
 		<h3>已支付订单信息：</h3>
 		<ul class="order">
-			<li v-for="item in orderArr" v-if="item.orderState==1">
+		    <li v-for="item in orderArr">
+		    <template v-if="item.orderState==1">
 				<div class="order-info">
 					<p>
 						{{item.business.businessName}}
@@ -55,6 +58,7 @@
 						<p>&#165;{{item.business.deliveryPrice}}</p>
 					</li>
 				</ul>
+			</template>
 			</li>
 		</ul>
 
@@ -93,6 +97,9 @@
 		methods:{
 			detailetShow(orders){
 				orders.isShowDetailet = !orders.isShowDetailet;
+			},
+			toPayment(orders){
+				this.$router.push({path:'/payment',query:{orderId:orders.orderId}})
 			}
 		},
 		components:{

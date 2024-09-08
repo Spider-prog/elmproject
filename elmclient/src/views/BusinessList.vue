@@ -3,6 +3,7 @@
 
 		<!-- header部分 -->
 		<header>
+			<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
 			<p>商家列表</p>
 		</header>
 
@@ -20,7 +21,9 @@
 				</div>
 			</li>
 		</ul>
-
+        
+		<div class="whiteblock"> nothing </div>
+		
 		<!-- 底部菜单部分 -->
 		<Footer></Footer>
 
@@ -79,6 +82,9 @@
 			},
 			toBusinessInfo(businessId){//跳转商家详细页面
 				this.$router.push({path:'/businessInfo',query:{businessId:businessId}});
+			},
+			goback(){
+				this.$router.go(-1);
 			}
 		}
 	}
@@ -90,7 +96,10 @@
 		width: 100%;
 		height: 100%;
 	}
-
+    .wapper .whiteblock {
+		width: 100%;
+		height: 14vw;
+	}
 	/****************** header部分 ******************/
 	.wrapper header {
 		width: 100%;
@@ -105,10 +114,13 @@
 		z-index: 1000;
 
 		display: flex;
-		justify-content: center;
+		/*justify-content: center;*/
 		align-items: center;
 	}
 
+    .wrapper header .go-back{
+		padding:0 32vw 0 2vw;
+	}
 	/****************** 商家列表部分 ******************/
 	.wrapper .business {
 		width: 100%;

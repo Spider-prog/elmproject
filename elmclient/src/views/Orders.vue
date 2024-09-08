@@ -3,6 +3,7 @@
 
 		<!-- header部分 -->
 		<header>
+			<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
 			<p>确认订单</p>
 		</header>
 
@@ -121,6 +122,9 @@
 				}).catch(error=>{
 					console.error(error);
 				});
+			},
+			goback(){
+				this.$router.go(-1);
 			}
 		}
 	}
@@ -147,10 +151,13 @@
 		z-index: 1000;
 
 		display: flex;
-		justify-content: center;
+		/*justify-content: center;*/
 		align-items: center;
 	}
-
+	
+	.wrapper header .go-back{
+		padding:0 32vw 0 2vw;
+	}
 	/****************** 订单信息部分 ******************/
 	.wrapper .order-info {
 		/*注意这里，不设置高，靠内容撑开。因为地址有可能折行*/
