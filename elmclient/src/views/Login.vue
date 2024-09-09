@@ -13,7 +13,9 @@
 					手机号码：
 				</div>
 				<div class="content">
-					<input type="text" v-model="userId" placeholder="手机号码">  <!--表单提交用v-model实现双向数据绑定-->
+					<!--<input type="text" v-model="userId" placeholder="手机号码"> -->
+					<!--表单提交用v-model实现双向数据绑定-->
+					<input type="text" v-model="userId" placeholder="手机号码" :disabled="isLoggingIn" pattern="^1[358][0-9]{9}$" maxlength="11">
 				</div>
 			</li>
 			<li>
@@ -21,7 +23,8 @@
 					密码：
 				</div>
 				<div class="content">
-					<input type="password" v-model="password" placeholder="密码">
+					<!--<input type="password" v-model="password" placeholder="密码">-->
+					<input type="password" v-model="password" placeholder="密码" :disabled="isLoggingIn" pattern="[A-Za-z0-9]{6,}" title="密码需包含且只能包含大、小写字母和数字，长度至少为6位">
 				</div>
 			</li>
 		</ul>
@@ -40,48 +43,65 @@
 
 <script>
 	import Footer from '../components/Footer.vue';
-	
-	export default{
-		name:'Login',
-		data(){
+
+	export default {
+		name: 'Login',
+		data() {
 			return {
-				userId:'',
-				password:''//传入两个字符串类型
+				userId: '',
+				password: '', //传入两个字符串类型
+				isLoggingIn: false
 			}
 		},
-		methods:{
-			login(){
-				//表单验证，手机号码和密码不能为空
-				if(this.userId==''){
-					alert('手机号码不能为空！');//alert()方法是显示一条弹出提示消息和确认按钮的警告框
+		methods: {
+			login() {
+				//对手机号账号和密码进行前端验证
+				if (!/^1[358][0-9]{9}$/.test(this.userId)) {
+					alert('请输入正确的手机号!');
 					return;
 				}
-				if(this.password==''){
+				if (!/^[A-Za-z0-9]{6,}$/.test(this.password)) {
+					alert('密码需包含且只能包含大、小写字母和数字，长度至少为6位！');
+					return;
+				}
+				//表单验证，手机号码和密码不能为空
+				if (this.userId == '') {
+					alert('手机号码不能为空！'); //alert()方法是显示一条弹出提示消息和确认按钮的警告框
+					return;
+				}
+				if (this.password == '') {
 					alert('密码不能为空！');
 					return;
 				}
+
+				this.isLoggingIn = true; // 禁用登录按钮，防止重复提交
+
 				//登录请求
-				this.$axios.post('UserController/getUserByIdByPass',this.$qs.stringify({
-					userId:this.userId,
-					password:this.password
-				})).then(response=>{
+				this.$axios.post('UserController/getUserByIdByPass', this.$qs.stringify({
+					userId: this.userId,
+					password: this.password
+				})).then(response => {
 					let user = response.data;
-					if(user==null){//查询完看是否返回了user对象
+					if (user == null) { //查询完看是否返回了user对象
 						alert('用户名或密码不正确！');
-					}else{
-						user.userImg = '';//sessionstorage有容量限制，为了防止数据溢出将Img置空
-						this.$setSessionStorage('user',user);//将键值对放进sessionstorage中
-						this.$router.go(-1);//从哪来回哪去，回退到上一个页面（这个功能很棒）
+					} else {
+						user.userImg = ''; //sessionstorage有容量限制，为了防止数据溢出将Img置空
+						this.$setSessionStorage('user', user); //将键值对放进sessionstorage中
+						this.$router.go(-1); //从哪来回哪去，回退到上一个页面（这个功能很棒）
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					console.error(error);
+				}).finally(() => {
+					this.isLoggingIn = false; // 重新启用登录按钮
 				});
 			},
-			register(){
-				this.$router.push({path:'register'});
+			register() {
+				this.$router.push({
+					path: 'register'
+				});
 			}
 		},
-		components:{
+		components: {
 			Footer
 		}
 	}
