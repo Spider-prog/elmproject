@@ -7,15 +7,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.neusoft.elmboot.po.User;
 import com.neusoft.elmboot.service.UserService;
 
+import static com.neusoft.elmboot.util.MD5Utils.formPassToDBPass;
+import static com.neusoft.elmboot.util.RamUtil.getRandomNumber;
+
 @RestController
-@RequestMapping("/UserController")
+@RequestMapping("/saveUser")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
 
+	//先用userId获取盐值，在进行单向加密后对比数据库
 	@RequestMapping("/getUserByIdByPass")
 	public User getUserByIdByPass(User user) throws Exception{
+		String salt = userService.getUserSaltById(user.getUserId());
+		user.setSalt(salt);
+		user.setPassword(formPassToDBPass(user.getPassword(),user.getSalt()));
 		return userService.getUserByIdByPass(user);
 	}
 	
@@ -26,6 +33,9 @@ public class UserController {
 	
 	@RequestMapping("/saveUser")
 	public int saveUser(User user) throws Exception{
+		String salt = getRandomNumber();
+		user.setSalt(salt);
+		user.setPassword(formPassToDBPass(user.getPassword(),user.getSalt()));
 		return userService.saveUser(user);
 	}
 }

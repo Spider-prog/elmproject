@@ -8,6 +8,8 @@ public class User {
 	private Integer userSex;
 	private String userImg;
 	private Integer delTag;
+
+	private String salt;
 	
 	public String getUserId() {
 		return userId;
@@ -44,5 +46,12 @@ public class User {
 	}
 	public void setDelTag(Integer delTag) {
 		this.delTag = delTag;
+	}
+	public String getSalt(){
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 }
