@@ -1,234 +1,277 @@
 <template>
 	<div class="wrapper">
-				
-				<!-- header部分 -->
-				<header>
-					<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
-					<p>商家信息</p>
-				</header>
-				
-				<!-- 商家logo部分 -->
-				<div class="business-logo">
-					<img :src="business.businessImg"> <!--动态绑定图片-->
-				</div>
-				
-				<!-- 商家信息部分 -->
-				<div class="business-info">
-					<h1>{{business.businessName}}</h1>
-					<p>&#165;{{business.starPrice}}起送 &#165;{{business.deliveryPrice}}配送</p>
-					<p>{{business.businessExplain}}</p>
-				</div>
-				
-				<!-- 食品列表部分 -->
-				<ul class="food">
-					<li v-for="(item,index) in foodArr"> <!--遍历附带索引便于之后选定食品-->
-						<div class="food-left">
-							<img :src="item.foodImg">
-							<div class="food-left-info">
-								<h3>{{item.foodName}}</h3>
-								<p>{{item.foodExplain}}</p>
-								<p>&#165;{{item.foodPrice}}</p>
-							</div>
-						</div>
-						<div class="food-right">
-							<div>
-								<i class="fa fa-minus-circle" @click="minus(index)" v-show="item.quantity!=0"></i><!--v-show指令通过改变元素的css属性来决定元素是显示还是隐藏-->
-							</div>
-							<p><span v-show="item.quantity!=0">{{item.quantity}}</span></p><!--内连元素-->
-							<div>
-								<i class="fa fa-plus-circle" @click="add(index)"></i>
-							</div>
-						</div>
-					</li>
-				</ul>
-				
-				
-				<!-- 购物车部分 -->
-				<div class="cart">
-					<div class="cart-left">
-						<div class="cart-left-icon" :style="totalQuantity==0?'background-color:#505051;':'background-color:#3190E8;'">
-							<i class="fa fa-shopping-cart"></i>
-							<div class="cart-left-icon-quantity" v-show="totalQuantity!=0">{{totalQuantity}}</div>
-						</div>
-						<div class="cart-left-info">
-							<p>&#165;{{totalPrice}}</p>
-							<p>另需配送费{{business.deliveryPrice}}元</p>
-						</div>
-					</div>
-					<div class="cart-right">
-						<!-- 不够起送费 -->
-						<div class="cart-right-item" v-show="totalSettle<business.starPrice" style="background-color: #535356;cursor: default;">
-							&#165;{{business.starPrice}}起送
-						</div>
-						<!-- 达到起送费 -->
-						<div class="cart-right-item" @click="toOrder" v-show="totalSettle>=business.starPrice">
-						    去结算
-						</div>
+
+		<!-- header部分 -->
+		<header>
+			<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
+			<p>商家信息</p>
+		</header>
+
+		<!-- 商家logo部分 -->
+		<div class="business-logo">
+			<img :src="business.businessImg">
+			<!--动态绑定图片-->
+		</div>
+
+		<!-- 商家信息部分 -->
+		<div class="business-info">
+			<h1>{{business.businessName}}</h1>
+			<p>&#165;{{business.starPrice}}起送 &#165;{{business.deliveryPrice}}配送</p>
+			<p>{{business.businessExplain}}</p>
+		</div>
+
+		<!-- 食品列表部分 -->
+		<ul class="food">
+			<li v-for="(item,index) in foodArr">
+				<!--遍历附带索引便于之后选定食品-->
+				<div class="food-left">
+					<img :src="item.foodImg">
+					<div class="food-left-info">
+						<h3>{{item.foodName}}</h3>
+						<p>{{item.foodExplain}}</p>
+						<p>&#165;{{item.foodPrice}}</p>
 					</div>
 				</div>
-				
+				<div class="food-right">
+					<div>
+						<i class="fa fa-minus-circle" @click="minus(index)" v-show="item.quantity!=0"></i>
+						<!--v-show指令通过改变元素的css属性来决定元素是显示还是隐藏-->
+					</div>
+					<p><span v-show="item.quantity!=0">{{item.quantity}}</span></p>
+					<!--内连元素-->
+					<div>
+						<i class="fa fa-plus-circle" @click="add(index)"></i>
+					</div>
+				</div>
+			</li>
+		</ul>
+
+
+		<!-- 购物车部分 -->
+		<div class="cart">
+			<ul class="cart-detailed" v-show="this.business.button==true&&this.cartArr!=null">
+				<li v-for="item in cartArr">
+					<div class="cart-detailed-left">
+						<!--<img :src="item.food.foodImg">-->
+						<p>{{item.food.foodName}} x {{item.quantity}}</p>
+					</div>
+					<p>&#165;{{item.food.foodPrice*item.quantity.toFixed(2)}}</p>
+				</li>
+			</ul>
+			<div class="cart-bottom">
+				<div class="cart-left">
+					<div class="cart-left-icon" :style="totalQuantity==0?'background-color:#505051;':'background-color:#3190E8;'">
+						<i class="fa fa-shopping-cart" @click="topressbutton"></i>
+						<div class="cart-left-icon-quantity" v-show="totalQuantity!=0">{{totalQuantity}}</div>
+					</div>
+					<div class="cart-left-info">
+						<p>&#165;{{totalPrice}}</p>
+						<p>另需配送费{{business.deliveryPrice}}元</p>
+					</div>
+				</div>
+				<div class="cart-right">
+					<!-- 不够起送费 -->
+					<div class="cart-right-item" v-show="totalSettle<business.starPrice" style="background-color: #535356;cursor: default;">
+						&#165;{{business.starPrice}}起送
+					</div>
+					<!-- 达到起送费 -->
+					<div class="cart-right-item" @click="toOrder" v-show="totalSettle>=business.starPrice">
+						去结算
+					</div>
+				</div>
 			</div>
+		</div>
+
+	</div>
 </template>
 
 <script>
-	export default{
-		name:'BusinessInfo',
-		data(){
+	export default {
+		name: 'BusinessInfo',
+		data() {
 			return {
-				businessId: this.$route.query.businessId,//从BusinessList组件传入id值
-				business:{},//返回一个business对象
-				foodArr:[],//食品数组
-				user:{}//添加用户对象
+				businessId: this.$route.query.businessId, //从BusinessList组件传入id值
+				business: {}, //返回一个business对象
+				foodArr: [], //食品数组
+				user: {}, //添加用户对象
+				cartArr: []
 			}
 		},
 		created() {
-			this.user = this.$getSessionStorage('user');//从sessionStorage中获取user对象
-			
+			this.user = this.$getSessionStorage('user'); //从sessionStorage中获取user对象
+
 			//根据businessId查询商家信息
-			this.$axios.post('BusinessController/getBusinessById',this.$qs.stringify({
-				businessId:this.businessId
-			})).then(response=>{
+			this.$axios.post('BusinessController/getBusinessById', this.$qs.stringify({
+				businessId: this.businessId
+			})).then(response => {
 				this.business = response.data;
-			}).catch(error=>{
+			}).catch(error => {
 				console.error(error);
 			});
-			
+
 			//根据businessId查询所属食品信息
-			this.$axios.post('FoodController/listFoodByBusinessId',this.$qs.stringify({
-				businessId:this.businessId
-			})).then(response=>{
+			this.$axios.post('FoodController/listFoodByBusinessId', this.$qs.stringify({
+				businessId: this.businessId
+			})).then(response => {
 				this.foodArr = response.data;
-				for(let i=0;i<this.foodArr.length;i++){//为每个食品添加数量属性，初始赋为0
-					this.foodArr[i].quantity=0;
+				for (let i = 0; i < this.foodArr.length; i++) { //为每个食品添加数量属性，初始赋为0
+					this.foodArr[i].quantity = 0;
 				}
 				//如果已登录，那么需要去查询购物车中是否已经选购了某个食品
 				//该操作是必要的，否则刷新页面前端数据丢失，与后端数据不一致产生问题
-				if(this.user!=null){
-					this.listCart();
+				if (this.user != null) {
+					this.listCart2();
 				}
-			}).catch(error=>{
+			}).catch(error => {
 				console.error(error);
 			});
 		},
-		methods:{
-			listCart(){
-				this.$axios.post('CartController/listCart',this.$qs.stringify({
-					businessId:this.businessId,
-					userId:this.user.userId
-				})).then(response=>{
+		methods: {
+			listCart() {
+				this.$axios.post('CartController/listCart', this.$qs.stringify({
+					businessId: this.businessId,
+					userId: this.user.userId
+				})).then(response => {
+					this.cartArr = response.data;
+					this.cartArr.sort();
+				}).catch(error => {
+					console.error(error);
+				});
+			},
+			listCart2() {
+				this.$axios.post('CartController/listCart', this.$qs.stringify({
+					businessId: this.businessId,
+					userId: this.user.userId
+				})).then(response => {
 					let cartArr = response.data;
-					for(let foodItem of this.foodArr){//遍历所有食品列表
+					//遍历所有食品列表
+					for (let foodItem of this.foodArr) {
 						foodItem.quantity = 0;
-						for(let cartItem of cartArr){
-							if(cartItem.foodId==foodItem.foodId){
+						for (let cartItem of cartArr) {
+							if (cartItem.foodId == foodItem.foodId) {
 								foodItem.quantity = cartItem.quantity;
 							}
 						}
 					}
 					this.foodArr.sort();
-				}).catch(error=>{
+				}).catch(error => {
 					console.error(error);
 				});
 			},
-			add(index){//食品数量加1，传过来index指定某个食品
+			add(index) { //食品数量加1，传过来index指定某个食品
 				//首先做登录验证（很重要）
-				if(this.user==null){//根据user对象是否为空判断是否登录
-					this.$router.push({path:'/login'});//如果未登录强制路由到登录组件
-					return;//接着之后直接退出
+				if (this.user == null) { //根据user对象是否为空判断是否登录
+					this.$router.push({
+						path: '/login'
+					}); //如果未登录强制路由到登录组件
+					return; //接着之后直接退出
 				}
-				if(this.foodArr[index].quantity==0){//如果开始数量为0做insert
+				if (this.foodArr[index].quantity == 0) { //如果开始数量为0做insert
 					this.savaCart(index);
-				}else{//否则如果开始数量不为0做update
-					this.updateCart(index,1);
+				} else { //否则如果开始数量不为0做update
+					this.updateCart(index, 1);
 				}
 			},
-			minus(index){//食品数量减1
-				if(this.user==null){
-					this.$router.push({path:'/login'});
+			minus(index) { //食品数量减1
+				if (this.user == null) {
+					this.$router.push({
+						path: '/login'
+					});
 					return;
 				}
-				if(this.foodArr[index].quantity>1){//如果开始数量大于1个做update
-					this.updateCart(index,-1);
-				}else{//否则如果开始数量为1个做remove
+				if (this.foodArr[index].quantity > 1) { //如果开始数量大于1个做update
+					this.updateCart(index, -1);
+				} else { //否则如果开始数量为1个做remove
 					this.removeCart(index);
 				}
 			},
-			savaCart(index){//向购物车表中添加一条记录
-				this.$axios.post('CartController/saveCart',this.$qs.stringify({
-					businessId:this.businessId,
-					userId:this.user.userId,
-					foodId:this.foodArr[index].foodId
-				})).then(response=>{
-					if(response.data==1){//当后端响应成功才更新前端数据
-						this.foodArr[index].quantity=1;//此食品数量要更新为1
-						this.foodArr.sort();//调用sort监听方法目标在于让vue监听到数据的变化而非排序
-					}else{
+			savaCart(index) { //向购物车表中添加一条记录
+				this.$axios.post('CartController/saveCart', this.$qs.stringify({
+					businessId: this.businessId,
+					userId: this.user.userId,
+					foodId: this.foodArr[index].foodId
+				})).then(response => {
+					if (response.data == 1) { //当后端响应成功才更新前端数据
+						this.foodArr[index].quantity = 1; //此食品数量要更新为1
+						this.foodArr.sort(); //调用sort监听方法目标在于让vue监听到数据的变化而非排序
+						this.listCart();
+					} else {
 						alert('向购物车中添加食品失败！');
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					console.error(error);
 				});
 			},
-			updateCart(index,num){
-				this.$axios.post('CartController/updateCart',this.$qs.stringify({
-					businessId:this.businessId,
-					userId:this.user.userId,
-					foodId:this.foodArr[index].foodId,
-					quantity:this.foodArr[index].quantity+num
-				})).then(response=>{
-					if(response.data==1){
-						this.foodArr[index].quantity+=num;//此食品数量要更新为1或-1；
+			updateCart(index, num) {
+				this.$axios.post('CartController/updateCart', this.$qs.stringify({
+					businessId: this.businessId,
+					userId: this.user.userId,
+					foodId: this.foodArr[index].foodId,
+					quantity: this.foodArr[index].quantity + num
+				})).then(response => {
+					if (response.data == 1) {
+						this.foodArr[index].quantity += num; //此食品数量要更新为1或-1；
 						this.foodArr.sort();
-					}else{
+						this.listCart();
+					} else {
 						alert('向购物车中更新食品失败！');
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					console.error(error);
 				});
 			},
-			removeCart(index){
-				this.$axios.post('CartController/removeCart',this.$qs.stringify({
-					businessId:this.businessId,
-					userId:this.user.userId,
-					foodId:this.foodArr[index].foodId
-				})).then(response=>{
-					if(response.data==1){
-						//此食品数量要更新为0；视图的减号和数量要消失
-						this.foodArr[index].quantity=0;
+			removeCart(index) {
+				this.$axios.post('CartController/removeCart', this.$qs.stringify({
+					businessId: this.businessId,
+					userId: this.user.userId,
+					foodId: this.foodArr[index].foodId
+				})).then(response => {
+					if (response.data == 1) {
+						this.foodArr[index].quantity = 0;//此食品数量要更新为0；视图的减号和数量要消失
 						this.foodArr.sort();
-					}else{
+						this.listCart();
+					} else {
 						alert('从购物车中删除食品失败！');
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					console.error(error);
 				});
 			},
-			toOrder(){
-				this.$router.push({path:'/orders',query:{businessId:this.business.businessId}});
+			toOrder() {
+				this.$router.push({
+					path: '/orders',
+					query: {
+						businessId: this.business.businessId
+					}
+				});
+			},
+			topressbutton() {
+				this.business.button = !this.business.button;
+				this.listCart();
 			}
 		},
-		computed:{
+		computed: {
 			//食品总价格
-			totalPrice(){
+			totalPrice() {
 				let total = 0;
-				for(let item of this.foodArr){
-					total += item.foodPrice*item.quantity;
+				for (let item of this.foodArr) {
+					total += item.foodPrice * item.quantity;
 				}
 				return total;
 			},
 			//食品总数量
-			totalQuantity(){
+			totalQuantity() {
 				let quantity = 0;
-				for(let item of this.foodArr){
+				for (let item of this.foodArr) {
 					quantity += item.quantity;
 				}
 				return quantity;
 			},
 			//结算总价格
-			totalSettle(){
-				return this.totalPrice+this.business.deliveryPrice;
+			totalSettle() {
+				return this.totalPrice + this.business.deliveryPrice;
 			},
-			goback(){
+			goback() {
 				this.$router.go(-1);
 			}
 		}
@@ -237,142 +280,195 @@
 
 <style scoped>
 	/****************** 总容器 ******************/
-	.wrapper{
+	.wrapper {
 		width: 100%;
 		height: 100%;
 	}
-	
+
 	/****************** header部分 ******************/
-	.wrapper header{
+	.wrapper header {
 		width: 100%;
 		height: 12vw;
 		background-color: #0097FF;
 		color: #fff;
 		font-size: 4.8vw;
-		
+
 		position: fixed;
 		left: 0;
 		top: 0;
 		z-index: 1000;
-		
+
 		display: flex;
 		/*justify-content: center;*/
 		align-items: center;
 	}
-	
-	.wrapper header .go-back{
-		padding:0 32vw 0 2vw;
+
+	.wrapper header .go-back {
+		padding: 0 32vw 0 2vw;
 	}
+
 	/****************** 商家logo部分 ******************/
-	.wrapper .business-logo{
+	.wrapper .business-logo {
 		width: 100%;
 		height: 35vw;
 		/*使用上外边距避开header部分*/
 		margin-top: 12vw;
-		
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
-	.wrapper .business-logo img{
+
+	.wrapper .business-logo img {
 		width: 40vw;
 		height: 30vw;
 		border-radius: 5px;
 	}
-	
+
 	/****************** 商家信息部分 ******************/
-	.wrapper .business-info{
+	.wrapper .business-info {
 		width: 100%;
 		height: 20vw;
-		
+
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
-	.wrapper .business-info h1{
+
+	.wrapper .business-info h1 {
 		font-size: 5vw;
 	}
-	.wrapper .business-info p{
+
+	.wrapper .business-info p {
 		font-size: 3vw;
 		color: #666;
 		margin-top: 1vw;
 	}
-	
+
 	/****************** 食品列表部分 ******************/
-	.wrapper .food{
+	.wrapper .food {
 		width: 100%;
 		/*使用下外边距避开footer部分*/
 		margin-bottom: 14vw;
 	}
-	.wrapper .food li{
+
+	.wrapper .food li {
 		width: 100%;
 		box-sizing: border-box;
 		padding: 2.5vw;
 		user-select: none;
-		
+
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
-	.wrapper .food li .food-left{
+
+	.wrapper .food li .food-left {
 		display: flex;
 		align-items: center;
 	}
-	.wrapper .food li .food-left img{
+
+	.wrapper .food li .food-left img {
 		width: 20vw;
 		height: 20vw;
 	}
-	.wrapper .food li .food-left .food-left-info{
+
+	.wrapper .food li .food-left .food-left-info {
 		margin-left: 3vw;
 	}
-	.wrapper .food li .food-left .food-left-info h3{
+
+	.wrapper .food li .food-left .food-left-info h3 {
 		font-size: 3.8vw;
 		color: #555;
 	}
-	.wrapper .food li .food-left .food-left-info p{
+
+	.wrapper .food li .food-left .food-left-info p {
 		font-size: 3vw;
 		color: #888;
 		margin-top: 2vw;
 	}
-	.wrapper .food li .food-right{
+
+	.wrapper .food li .food-right {
 		width: 16vw;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
-	.wrapper .food li .food-right .fa-minus-circle{
+
+	.wrapper .food li .food-right .fa-minus-circle {
 		font-size: 5.5vw;
 		color: #999;
 		cursor: pointer;
 	}
-	.wrapper .food li .food-right p{
+
+	.wrapper .food li .food-right p {
 		font-size: 3.6vw;
 		color: #333;
 	}
-	.wrapper .food li .food-right .fa-plus-circle{
+
+	.wrapper .food li .food-right .fa-plus-circle {
 		font-size: 5.5vw;
 		color: #0097EF;
 		cursor: pointer;
 	}
-	
+
 	/****************** 购物车部分 ******************/
-	.wrapper .cart{
+	.wrapper .cart {
 		width: 100%;
-		height: 14vw;
-		
+
 		position: fixed;
 		left: 0;
 		bottom: 0;
-		
+
+		display: flex;
+		flex-direction: column;
+	}
+
+	.wrapper .cart .cart-detailed {
+		width: 100%;
+
+		left: 0;
+		bottom: 0;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		font-size: 4vw;
+
+		padding: 0 0 5vw 0;
+		/*background-color: #3190E8;*/
+		background-color: #477DAE;
+		color: #fff;
+	}
+
+	.wrapper .cart .cart-detailed li {
+		left: 0;
+		bottom: 0;
+
+		display: flex;
+		justify-content: space-between;
+		padding: 0 2.5vw 0 2.5vw;
+		margin: 2vw 0;
+	}
+
+	.wrapper .cart .cart-bottom {
+		width: 100%;
+		height: 14vw;
+
+		left: 0;
+		bottom: 0;
+
 		display: flex;
 	}
-	.wrapper .cart .cart-left{
+
+	.wrapper .cart .cart-bottom .cart-left {
 		flex: 2;
 		background-color: #505051;
 		display: flex;
 	}
-	.wrapper .cart .cart-left .cart-left-icon{
+
+	.wrapper .cart .cart-bottom .cart-left .cart-left-icon {
 		width: 16vw;
 		height: 16vw;
 		box-sizing: border-box;
@@ -381,47 +477,51 @@
 		background-color: #3190E8;
 		font-size: 7vw;
 		color: #fff;
-		
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		
+
 		margin-top: -4vw;
 		margin-left: 3vw;
-		
+
 		position: relative;
 	}
-	.wrapper .cart .cart-left .cart-left-icon-quantity{
+
+	.wrapper .cart .cart-bottom .cart-left .cart-left-icon-quantity {
 		width: 5vw;
 		height: 5vw;
 		border-radius: 2.5vw;
 		background-color: red;
 		color: #fff;
 		font-size: 3.6vw;
-		
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		
+
 		position: absolute;
 		right: -1.5vw;
 		top: -1.5vw;
 	}
-	.wrapper .cart .cart-left .cart-left-info p:first-child{
+
+	.wrapper .cart .cart-bottom .cart-left .cart-left-info p:first-child {
 		font-size: 4.5vw;
 		color: #fff;
 		margin-top: 1vw;
 	}
-	.wrapper .cart .cart-left .cart-left-info p:last-child{
+
+	.wrapper .cart .cart-bottom .cart-left .cart-left-info p:last-child {
 		font-size: 2.8vw;
 		color: #AAA;
 	}
-	
-	.wrapper .cart .cart-right{
+
+	.wrapper .cart .cart-bottom .cart-right {
 		flex: 1;
 	}
+
 	/*达到起送费时的样式*/
-	.wrapper .cart .cart-right .cart-right-item{
+	.wrapper .cart .cart-bottom .cart-right .cart-right-item {
 		width: 100%;
 		height: 100%;
 		background-color: #38CA73;
@@ -430,12 +530,13 @@
 		font-weight: 700;
 		user-select: none;
 		cursor: pointer;
-		
+
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
-	
+
+
 	/*不够起送费时的样式（只有背景色和鼠标样式的区别）*/
 	/*
 	.wrapper .cart .cart-right .cart-right-item{

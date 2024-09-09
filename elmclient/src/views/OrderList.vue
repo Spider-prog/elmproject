@@ -10,55 +10,55 @@
 		<h3>未支付订单信息：</h3>
 		<ul class="order">
 			<li v-for="item in orderArr">
-			<template v-if="item.orderState==0">
-				<div class="order-info">
-					<p>
-						{{item.business.businessName}}
-						<i class="fa fa-caret-down" @click="detailetShow(item)"></i>
-					</p>
-					<div class="order-info-right">
-						<p>&#165;{{item.orderTotal}}</p>
-						<div class="order-info-right-icon" @click="toPayment(item)">去支付</div>
+				<template v-if="item.orderState==0">
+					<div class="order-info">
+						<p>
+							{{item.business.businessName}}
+							<i class="fa fa-caret-down" @click="detailetShow(item)"></i>
+						</p>
+						<div class="order-info-right">
+							<p>&#165;{{item.orderTotal}}</p>
+							<div class="order-info-right-icon" @click="toPayment(item)">去支付</div>
+						</div>
 					</div>
-				</div>
-				<ul class="order-detailet" v-show="item.isShowDetailet">
-					<li v-for="odItem in item.list">
-						<p>{{odItem.food.foodName}} x {{odItem.quantity}}</p>
-						<p>&#165;{{odItem.food.foodPrice*odItem.quantity}}</p>
-					</li>
-					<li>
-						<p>配送费</p>
-						<p>&#165;{{item.business.deliveryPrice}}</p>
-					</li>
-				</ul>
-			</template>
+					<ul class="order-detailet" v-show="item.isShowDetailet">
+						<li v-for="odItem in item.list">
+							<p>{{odItem.food.foodName}} x {{odItem.quantity}}</p>
+							<p>&#165;{{odItem.food.foodPrice*odItem.quantity}}</p>
+						</li>
+						<li>
+							<p>配送费</p>
+							<p>&#165;{{item.business.deliveryPrice}}</p>
+						</li>
+					</ul>
+				</template>
 			</li>
 		</ul>
 
 		<h3>已支付订单信息：</h3>
 		<ul class="order">
-		    <li v-for="item in orderArr">
-		    <template v-if="item.orderState==1">
-				<div class="order-info">
-					<p>
-						{{item.business.businessName}}
-						<i class="fa fa-caret-down" @click="detailetShow(item)"></i>
-					</p>
-					<div class="order-info-right">
-						<p>&#165;{{item.orderTotal}}</p>
+			<li v-for="item in orderArr">
+				<template v-if="item.orderState==1">
+					<div class="order-info">
+						<p>
+							{{item.business.businessName}}
+							<i class="fa fa-caret-down" @click="detailetShow(item)"></i>
+						</p>
+						<div class="order-info-right">
+							<p>&#165;{{item.orderTotal}}</p>
+						</div>
 					</div>
-				</div>
-				<ul class="order-detailet" v-show="item.isShowDetailet">
-					<li v-for="odItem in item.list">
-						<p>{{odItem.food.foodName}} x {{odItem.quantity}}</p>
-						<p>&#165;{{odItem.food.foodPrice*odItem.quantity}}</p>
-					</li>
-					<li>
-						<p>配送费</p>
-						<p>&#165;{{item.business.deliveryPrice}}</p>
-					</li>
-				</ul>
-			</template>
+					<ul class="order-detailet" v-show="item.isShowDetailet">
+						<li v-for="odItem in item.list">
+							<p>{{odItem.food.foodName}} x {{odItem.quantity}}</p>
+							<p>&#165;{{odItem.food.foodPrice*odItem.quantity}}</p>
+						</li>
+						<li>
+							<p>配送费</p>
+							<p>&#165;{{item.business.deliveryPrice}}</p>
+						</li>
+					</ul>
+				</template>
 			</li>
 		</ul>
 
@@ -70,39 +70,44 @@
 
 <script>
 	import Footer from '../components/Footer.vue';
-	
-	export default{
-		name:'OrderList',
-		data(){
+
+	export default {
+		name: 'OrderList',
+		data() {
 			return {
-				orderArr:[],
-				user:{}
+				orderArr: [],
+				user: {}
 			}
 		},
 		created() {
 			this.user = this.$getSessionStorage('user');
-			
-			this.$axios.post('OrdersController/listOrdersByUserId',this.$qs.stringify({
-				userId:this.user.userId
-			})).then(response=>{
+
+			this.$axios.post('OrdersController/listOrdersByUserId', this.$qs.stringify({
+				userId: this.user.userId
+			})).then(response => {
 				let result = response.data;
-				for(let orders of result){
+				for (let orders of result) {
 					orders.isShowDetailet = false;
 				}
 				this.orderArr = result;
-			}).catch(error=>{
+			}).catch(error => {
 				console.error(error);
 			});
 		},
-		methods:{
-			detailetShow(orders){
+		methods: {
+			detailetShow(orders) {
 				orders.isShowDetailet = !orders.isShowDetailet;
 			},
-			toPayment(orders){
-				this.$router.push({path:'/payment',query:{orderId:orders.orderId}})
+			toPayment(orders) {
+				this.$router.push({
+					path: '/payment',
+					query: {
+						orderId: orders.orderId
+					}
+				})
 			}
 		},
-		components:{
+		components: {
 			Footer
 		}
 	}
