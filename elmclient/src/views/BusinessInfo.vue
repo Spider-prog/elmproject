@@ -45,8 +45,9 @@
 				</div>
 			</li>
 		</ul>
-
-
+		
+		<div class="whiteblock"></div>
+		
 		<!-- 购物车部分 -->
 		<div class="cart">
 			<ul class="cart-detailed" v-show="this.business.button==true&&this.cartArr!=null">
@@ -284,7 +285,11 @@
 		width: 100%;
 		height: 100%;
 	}
-
+	
+	.wrapper .whiteblock {
+		width: 100%;
+		height: 2vw;
+	}
 	/****************** header部分 ******************/
 	.wrapper header {
 		width: 100%;

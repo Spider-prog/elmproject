@@ -14,6 +14,8 @@ import OrderList from '../views/OrderList.vue'
 import AddUserAddress from '../views/AddUserAddress.vue'
 import EditUserAddress from '../views/EditUserAddress.vue'
 import Register from '../views/Register.vue'
+import My from '../views/My.vue'
+import BusinessSearch from '../views/BusinessSearch.vue'
 
 //Vue.use(VueRouter)
 
@@ -65,6 +67,14 @@ const routes = [{
 		path: '/register',
 		name: 'Register',
 		component: Register
+	}, {
+		path: '/my',
+		name: 'My',
+		component: My
+	}, {
+		path: '/businessSearch',
+		name: 'BusinessSearch',
+		component: BusinessSearch
 	}
 
 ]

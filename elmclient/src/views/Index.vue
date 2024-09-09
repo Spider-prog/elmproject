@@ -17,7 +17,9 @@
 			<div class="search-fixed-top" ref="fixedBox">
 				<!-- 搜索框部分中间的白框 -->
 				<div class="search-box">
-					<i class="fa fa-search"></i>搜索饿了么商家、商品名称
+					<i class="fa fa-search" @click="toBusinessSearch(businessName)"></i>
+					<input type="text" v-model="businessName" placeholder="搜索饿了么商家、商品名称">
+					<!--<i class="fa fa-search"></i>搜索饿了么商家、商品名称-->
 				</div>
 			</div>
 		</div>
@@ -102,7 +104,7 @@
 
 		<!-- 推荐商家列表部分 -->
 		<ul class="business">
-			<li>
+			<li @click="toBusinessInfo(10001)">
 				<img src="../assets/sj01.png">
 				<div class="business-info">
 					<div class="business-info-h">
@@ -147,7 +149,7 @@
 					</div>
 				</div>
 			</li>
-			<li>
+			<li @click="toBusinessInfo(10002)">
 				<img src="../assets/sj02.png">
 				<div class="business-info">
 					<div class="business-info-h">
@@ -192,7 +194,7 @@
 					</div>
 				</div>
 			</li>
-			<li>
+			<li @click="toBusinessInfo(10003)">
 				<img src="../assets/sj03.png">
 				<div class="business-info">
 					<div class="business-info-h">
@@ -237,7 +239,7 @@
 					</div>
 				</div>
 			</li>
-			<li>
+			<li @click="toBusinessInfo(10004)">
 				<img src="../assets/sj04.png">
 				<div class="business-info">
 					<div class="business-info-h">
@@ -282,7 +284,7 @@
 					</div>
 				</div>
 			</li>
-			<li>
+			<li @click="toBusinessInfo(10005)">
 				<img src="../assets/sj05.png">
 				<div class="business-info">
 					<div class="business-info-h">
@@ -337,11 +339,11 @@
 <script>
 	//导入共通组件
 	import Footer from '../components/Footer.vue';
-	
+
 	export default {
 		name: 'Index',
 		mounted() {
-			document.onscroll = ()=> {
+			document.onscroll = () => {
 				//获取滚动条位置
 				let s1 = document.documentElement.scrollTop;
 				let s2 = document.body.scrollTop;
@@ -370,12 +372,33 @@
 			//当切换到其他组件时，就不需要document滚动条事件，所以将此事件去掉
 			document.onscroll = null;
 		},
-		components:{
+		components: {
 			Footer
 		},
-		methods:{
-			toBusinessList(orderTypeId){
-				this.$router.push({path:'/businessList',query:{orderTypeId:orderTypeId}});
+		methods: {
+			toBusinessList(orderTypeId) {
+				this.$router.push({
+					path: '/businessList',
+					query: {
+						orderTypeId: orderTypeId
+					}
+				});
+			},
+			toBusinessSearch(orderTypeId) {
+				this.$router.push({
+					path: '/businessSearch',
+					query: {
+						orderTypeId: orderTypeId
+					}
+				});
+			},
+			toBusinessInfo(businessId) {
+				this.$router.push({
+					path: '/businessInfo',
+					query: {
+						businessId: businessId
+					}
+				});
 			}
 		}
 	}
@@ -445,6 +468,13 @@
 		font-family: "宋体";
 		/*此样式是让文本选中状态无效*/
 		user-select: none;
+	}
+	
+	.wrapper .search .search-fixed-top .search-box input {
+		border: none;
+		outline: none;
+		margin-right:5vw;
+		height:7vw;
 	}
 
 	.wrapper .search .search-fixed-top .search-box .fa-search {

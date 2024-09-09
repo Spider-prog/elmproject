@@ -103,10 +103,10 @@
 				}).catch(error => {
 					console.error(error);
 				});
+			},
+			goback(){
+				this.$router.go(-1);
 			}
-		},
-		goback(){
-			this.$router.go(-1);
 		}
 	}
 </script>

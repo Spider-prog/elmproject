@@ -85,7 +85,7 @@
 					if (user == null) { //查询完看是否返回了user对象
 						alert('用户名或密码不正确！');
 					} else {
-						user.userImg = ''; //sessionstorage有容量限制，为了防止数据溢出将Img置空
+						//user.userImg = ''; //sessionstorage有容量限制，为了防止数据溢出将Img置空
 						this.$setSessionStorage('user', user); //将键值对放进sessionstorage中
 						this.$router.go(-1); //从哪来回哪去，回退到上一个页面（这个功能很棒）
 					}

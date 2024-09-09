@@ -14,7 +14,7 @@
 				<p>{{deliveryaddress!=null?deliveryaddress.address:'请选择送货地址'}}</p>
 				<i class="fa fa-angle-right"></i>
 			</div>
-			<p>{{user.userName}}{{user.userSex | sexFilter}} {{user.userId}}</p>
+			<p>{{user.userName}}{{sexFilter}} {{user.userId}}</p>
 		</div>
 
 		<h3>{{business.businessName}}</h3>
@@ -47,83 +47,96 @@
 </template>
 
 <script>
-	export default{
-		name:'Orders',
-		data(){
+	export default {
+		name: 'Orders',
+		data() {
 			return {
-				businessId:this.$route.query.businessId,
-				business:{},
-				user:{},
-				cartArr:[],
-				deliveryaddress:{}
+				businessId: this.$route.query.businessId,
+				business: {},
+				user: {},
+				cartArr: [],
+				deliveryaddress: {}
 			}
 		},
 		created() {
 			this.user = this.$getSessionStorage('user');
 			this.deliveryaddress = this.$getLocalStorage(this.user.userId);
-			
+
 			//查询当前商家
-			this.$axios.post('BusinessController/getBusinessById',this.$qs.stringify({
-				businessId:this.businessId
-			})).then(response=>{
+			this.$axios.post('BusinessController/getBusinessById', this.$qs.stringify({
+				businessId: this.businessId
+			})).then(response => {
 				this.business = response.data;
-			}).catch(error=>{
+			}).catch(error => {
 				console.error(error);
 			});
-			
+
 			//查询当前用户在购物车中的当前商家食品列表
-			this.$axios.post('CartController/listCart',this.$qs.stringify({
-				userId:this.user.userId,
-				businessId:this.businessId
-			})).then(response=>{
+			this.$axios.post('CartController/listCart', this.$qs.stringify({
+				userId: this.user.userId,
+				businessId: this.businessId
+			})).then(response => {
 				this.cartArr = response.data;
-			}).catch(error=>{
+			}).catch(error => {
 				console.error(error);
 			});
 		},
-		computed:{
-			totalPrice(){
+		computed: {
+			totalPrice() {
 				let totalPrice = 0;
-				for(let cartItem of this.cartArr){
-					totalPrice += cartItem.food.foodPrice*cartItem.quantity;
+				for (let cartItem of this.cartArr) {
+					totalPrice += cartItem.food.foodPrice * cartItem.quantity;
 				}
 				totalPrice += this.business.deliveryPrice;
 				return totalPrice.toFixed(2);
-			}
-		},
-		filters:{
-			sexFilter(value){
-				return value==1?'先生':'女士';
-			}
-		},
-		methods:{
-			toUserAddress(){
-				this.$router.push({path:'/userAddress',query:{businessId:this.businessId}});
 			},
-			toPayment(){
-				if(this.deliveryaddress==null){
+			sexFilter(){
+				return this.user.userSex==1?'先生' : '女士';
+			}
+		},
+		//filters: {
+		//	sexFilter(value) {
+		//		return value == 1 ? '先生' : '女士';
+		//	}
+		//},
+		methods: {
+			toUserAddress() {
+				this.$router.push({
+					path: '/userAddress',
+					query: {
+						businessId: this.businessId
+					}
+				});
+			},
+			toPayment() {
+				if (this.deliveryaddress == null) {
 					alert('请选择送货地址！');
 					return;
 				}
-				
+
 				//创建订单
-				this.$axios.post('OrdersController/createOrders',this.$qs.stringify({
-					userId:this.user.userId,
-					businessId:this.businessId,
-					daId:this.deliveryaddress.daId,
-					orderTotal:this.totalPrice,
-				})).then(response=>{
+				this.$axios.post('OrdersController/createOrders', this.$qs.stringify({
+					userId: this.user.userId,
+					businessId: this.businessId,
+					daId: this.deliveryaddress.daId,
+					orderTotal: this.totalPrice,
+				})).then(response => {
 					let orderId = response.data;
-					if(orderId>0){
-						this.$router.push({path:'/payment',query:{orderId:orderId}});
-					}else{
+					if (orderId > 0) {
+						this.$router.push({
+							path: '/payment',
+							query: {
+								orderId: orderId
+							}
+						});
+					} else {
 						alert('创建订单失败！');
 					}
-				}).catch(error=>{
+				}).catch(error => {
 					console.error(error);
 				});
 			},
-			goback(){
+			goback() {
 				this.$router.go(-1);
 			}
 		}
@@ -154,10 +167,11 @@
 		/*justify-content: center;*/
 		align-items: center;
 	}
-	
-	.wrapper header .go-back{
-		padding:0 32vw 0 2vw;
+
+	.wrapper header .go-back {
+		padding: 0 32vw 0 2vw;
 	}
+
 	/****************** 订单信息部分 ******************/
 	.wrapper .order-info {
 		/*注意这里，不设置高，靠内容撑开。因为地址有可能折行*/
