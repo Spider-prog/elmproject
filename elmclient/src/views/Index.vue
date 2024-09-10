@@ -473,6 +473,7 @@
 	.wrapper .search .search-fixed-top .search-box input {
 		border: none;
 		outline: none;
+		font-size : 3vw;
 		margin-right:5vw;
 		height:7vw;
 	}

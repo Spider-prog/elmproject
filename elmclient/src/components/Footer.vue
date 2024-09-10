@@ -22,14 +22,34 @@
 <script>
 	export default{
 		name:'Footer',
+		data() {
+			return {
+				user: {}
+			}
+		},
+		created() {
+			this.user = this.$getSessionStorage('user');
+		},
 		methods:{
 			toIndex(){
 				this.$router.push({path:'/index'});
 			},
 			toOrderList(){
+				if (this.user == null) { //根据user对象是否为空判断是否登录
+					this.$router.push({
+						path: '/login'
+					}); //如果未登录强制路由到登录组件
+					return; //接着之后直接退出
+				}
 				this.$router.push({path:'/orderList'});
 			},
 			toMy(){
+				if (this.user == null) { //根据user对象是否为空判断是否登录
+					this.$router.push({
+						path: '/login'
+					}); //如果未登录强制路由到登录组件
+					return; //接着之后直接退出
+				}
 				this.$router.push({path:'/my'});
 			}
 		}

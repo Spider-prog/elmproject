@@ -86,14 +86,14 @@
 		methods:{
 			detailetShow(){
 				this.isShowDetailet = !this.isShowDetailet;
+			},
+			goback(){
+				this.$router.go(-1);
 			}
 		},
 		components: {
 			Footer
 		},
-		goback(){
-			this.$router.go(-1);
-		}
 	}
 </script>
 

@@ -5,12 +5,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 //import VueRouter from 'vue-router'
 import Index from '../views/Index.vue'
 import BusinessList from '../views/BusinessList.vue'
+import BusinessList2 from '../views/BusinessList2.vue'
 import BusinessInfo from '../views/BusinessInfo.vue'
 import Login from '../views/Login.vue'
 import Orders from '../views/Orders.vue'
 import UserAddress from '../views/UserAddress.vue'
 import Payment from '../views/Payment.vue'
 import OrderList from '../views/OrderList.vue'
+import OrderList2 from '../views/OrderList2.vue'
 import AddUserAddress from '../views/AddUserAddress.vue'
 import EditUserAddress from '../views/EditUserAddress.vue'
 import Register from '../views/Register.vue'
@@ -32,6 +34,10 @@ const routes = [{
 		name: 'BusinessList',
 		component: BusinessList
 	}, {
+		path: '/businessList2',
+		name: 'BusinessList2',
+		component: BusinessList2
+	},{
 		path: '/businessInfo',
 		name: 'BusinessInfo',
 		component: BusinessInfo
@@ -43,6 +49,10 @@ const routes = [{
 		path: '/orders',
 		name: 'Orders',
 		component: Orders
+	}, {
+		path: '/orderList2',
+		name: 'OrderList2',
+		component: OrderList2
 	}, {
 		path: '/userAddress',
 		name: 'UserAddress',
