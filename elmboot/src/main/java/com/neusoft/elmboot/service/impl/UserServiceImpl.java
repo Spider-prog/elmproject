@@ -13,6 +13,7 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private UserMapper userMapper;
 
+
 	@Override
 	public User getUserByIdByPass(User user) {
 		return userMapper.getUserByIdByPass(user);
@@ -26,5 +27,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int saveUser(User user) {
 		return userMapper.saveUser(user);
+	}
+
+	@Override
+	public String getUserSaltById(String userId)
+	{
+		return userMapper.getUserSaltById(userId);
 	}
 }
