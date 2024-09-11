@@ -9,7 +9,7 @@
 		<div class='userinfo'>
 			<!-- header部分 -->
 			<div class="user">
-				<img src="../assets/userimg.png">
+				<img v-bind:src="userimg">
 				<div class="user-info">
 					<div class="user-info-name">
 						<h2>{{this.user.userName}}</h2>
@@ -41,7 +41,7 @@
 				</li>
 			</ul>
 			<ul class="userinfob">
-				<li @click="">
+				<li @click="toChangePwd">
 					<p><i class="fa fa-expeditedssl"></i>修改密码</p>
 					<i class="fa fa-angle-right"></i>
 				</li>
@@ -82,11 +82,13 @@
 		name: 'My',
 		data: function() {
 			return {
-				user: {}
+				user: {},
+				userimg: ''
 			}
 		},
 		created() {
 			this.user = this.$getSessionStorage('user');
+			this.userimg = this.$getSessionStorage('userimg');
 		},
 		methods: {
 			toBusinessList2(orderTypeId) {
@@ -109,8 +111,15 @@
 				});
 			},
 			// 跳转到修改密码页面
-			changePwd() {
-				this.$router.push('/changePwd');
+			toChangePwd() {
+				this.$router.push({
+					path: '/changePwd',
+				});
+			},
+			toMyWallet() {
+				this.$router.push({
+					path: '/myWallet',
+				});
 			},
 			// 跳转到头像修改页面
 			changeImg: function(userId) {
@@ -123,9 +132,6 @@
 			},
 			toMyCredit: function() {
 				this.$router.push('/credit');
-			},
-			toMyWallet: function() {
-				this.$router.push('/myWallet');
 			},
 			// 获取用户信息
 			getUserById: function(userId) {
@@ -211,6 +217,7 @@
 	.wrapper .userinfo .user img {
 		width: 16vw;
 		height: 16vw;
+		border-radius: 8vw;
 		margin-left: 4vw;
 		margin-right: 3vw;
 	}

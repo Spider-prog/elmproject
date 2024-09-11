@@ -18,7 +18,9 @@ import EditUserAddress from '../views/EditUserAddress.vue'
 import Register from '../views/Register.vue'
 import My from '../views/My.vue'
 import BusinessSearch from '../views/BusinessSearch.vue'
-
+import MyWallet from '../views/MyWallet.vue'
+import ChangePwd from '../views/ChangePwd.vue'
+import MyImg from '../views/MyImg.vue'
 //Vue.use(VueRouter)
 
 const routes = [{
@@ -85,8 +87,19 @@ const routes = [{
 		path: '/businessSearch',
 		name: 'BusinessSearch',
 		component: BusinessSearch
+	},{
+		path: '/myWallet',
+		name: 'MyWallet',
+		component: MyWallet
+	},{
+		path: '/changePwd',
+		name: 'ChangePwd',
+		component: ChangePwd
+	},{
+		path: '/myImg',
+		name: 'MyImg',
+		component: MyImg
 	}
-
 ]
 
 const router = createRouter({
