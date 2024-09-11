@@ -63,17 +63,17 @@
 				<div class="cart-left">
 					<div class="cart-left-icon" :style="totalQuantity==0?'background-color:#505051;':'background-color:#3190E8;'">
 						<i class="fa fa-shopping-cart" @click="topressbutton"></i>
-						<div class="cart-left-icon-quantity" v-show="totalQuantity!=0">{{totalQuantity}}</div>
+						<div class="cart-left-icon-quantity" v-show="totalQuantity!=0">{{totalQuantity.toFixed(2)}}</div>
 					</div>
 					<div class="cart-left-info">
-						<p>&#165;{{totalPrice}}</p>
-						<p>另需配送费{{business.deliveryPrice}}元</p>
+						<p>&#165;{{totalPrice.toFixed(2)}}</p>
+						<p>另需配送费{{business.deliveryPrice.toFixed(2)}}元</p>
 					</div>
 				</div>
 				<div class="cart-right">
 					<!-- 不够起送费 -->
 					<div class="cart-right-item" v-show="totalSettle<business.starPrice" style="background-color: #535356;cursor: default;">
-						&#165;{{business.starPrice}}起送
+						&#165;{{business.starPrice.toFixed(2)}}起送
 					</div>
 					<!-- 达到起送费 -->
 					<div class="cart-right-item" @click="toOrder" v-show="totalSettle>=business.starPrice">

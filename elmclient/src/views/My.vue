@@ -78,6 +78,7 @@
 
 <script>
 	import Footer from '../components/Footer.vue'
+	
 	export default {
 		name: 'My',
 		data: function() {
@@ -87,6 +88,9 @@
 			}
 		},
 		created() {
+			if(this.$getSessionStorage('userimg')==null){
+				this.$setSessionStorage('userimg',"http://localhost:8081/img/user4.237a7461.png");
+			}
 			this.user = this.$getSessionStorage('user');
 			this.userimg = this.$getSessionStorage('userimg');
 		},

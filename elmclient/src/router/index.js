@@ -21,12 +21,17 @@ import BusinessSearch from '../views/BusinessSearch.vue'
 import MyWallet from '../views/MyWallet.vue'
 import ChangePwd from '../views/ChangePwd.vue'
 import MyImg from '../views/MyImg.vue'
+import OpenPage from '../views/OpenPage.vue'
 //Vue.use(VueRouter)
 
 const routes = [{
+		path: '/index',
+		name: 'Index',
+		component: Index
+	}, {
 		path: '/',
 		name: 'Home',
-		component: Index
+		component: OpenPage
 	}, {
 		path: '/index',
 		name: 'Index',

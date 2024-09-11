@@ -1,5 +1,5 @@
 <template>
-	<!-- 总容器 -->
+	<!-- 总容器 #FFFDF1-->
 	<div class="wrapper">
 		<!-- header部分 -->
 		<header>

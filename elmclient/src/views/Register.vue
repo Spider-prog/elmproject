@@ -62,6 +62,7 @@
 
 <script>
 	import Footer from '../components/Footer.vue';
+	import md5 from 'js-md5';  
 
 	export default {
 		name: 'Register',
@@ -106,8 +107,13 @@
 					alert('用户名不能为空！');
 					return;
 				}
-
-				//注册请求
+				// //注册请求
+				// const md5:any = new Md5()
+				// md5.appendAsciiStr(this.user.password)
+				// this.user.password = md5.end()
+				// console.log('加密密码：',this.user.password);
+				this.confirmPassword = md5(this.confirmPassword.toString());
+				this.user.password = md5(this.user.password.toString());
 				this.$axios.post('UserController/saveUser', this.$qs.stringify(
 					this.user
 				)).then(response => {
