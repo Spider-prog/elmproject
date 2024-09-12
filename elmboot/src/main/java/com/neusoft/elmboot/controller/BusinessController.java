@@ -2,6 +2,7 @@ package com.neusoft.elmboot.controller;
 
 import java.util.List;
 
+import com.neusoft.elmboot.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,9 @@ public class BusinessController {
 	
 	@Autowired
 	private BusinessService businessService;
+
+	@Autowired
+	TokenUtil tokenUtil;
 	
 	@RequestMapping("/listBusinessByOrderTypeId")
 	public List<Business> listBusinessByOrderTypeId(Business business) throws Exception{
@@ -25,5 +29,4 @@ public class BusinessController {
 	public Business getBusinessById(Business business) throws Exception{
 		return businessService.getBusinessById(business.getBusinessId());
 	}
-
 }

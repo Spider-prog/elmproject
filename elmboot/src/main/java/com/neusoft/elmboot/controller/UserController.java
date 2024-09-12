@@ -1,29 +1,40 @@
 package com.neusoft.elmboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.neusoft.elmboot.po.User;
 import com.neusoft.elmboot.service.UserService;
+import com.neusoft.elmboot.util.TokenUtil;
 
-import static com.neusoft.elmboot.util.MD5Utils.formPassToDBPass;
+import static com.neusoft.elmboot.util.MD5forDBUtil.formPassToDBPass;
 import static com.neusoft.elmboot.util.RamUtil.getRandomNumber;
 
 @RestController
-@RequestMapping("/saveUser")
+@RequestMapping("/userController")
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	TokenUtil tokenUtil;
+
 	//先用userId获取盐值，在进行单向加密后对比数据库
 	@RequestMapping("/getUserByIdByPass")
-	public User getUserByIdByPass(User user) throws Exception{
+	public HttpEntity<User> getUserByIdByPass(User user) throws Exception{
+		HttpHeaders headers = new HttpHeaders( );
+		headers.set( "Authorization", tokenUtil.getToken(user.getUserId()));
 		String salt = userService.getUserSaltById(user.getUserId());
+
 		user.setSalt(salt);
 		user.setPassword(formPassToDBPass(user.getPassword(),user.getSalt()));
-		return userService.getUserByIdByPass(user);
+
+		HttpEntity<User> entity = new HttpEntity<>(userService.getUserByIdByPass(user),headers);
+		return entity;
 	}
 	
 	@RequestMapping("/getUserById")
@@ -32,10 +43,15 @@ public class UserController {
 	}
 	
 	@RequestMapping("/saveUser")
-	public int saveUser(User user) throws Exception{
-		String salt = getRandomNumber();
+	public HttpEntity saveUser(User user) throws Exception{
+		HttpHeaders headers = new HttpHeaders( );
+		headers.set( "Authorization", tokenUtil.getToken(user.getUserId()));
+
+		String salt = getRandomNumber(8);
 		user.setSalt(salt);
 		user.setPassword(formPassToDBPass(user.getPassword(),user.getSalt()));
-		return userService.saveUser(user);
+
+		HttpEntity<Integer> entity = new HttpEntity<>(userService.saveUser(user),headers);
+		return entity;
 	}
 }

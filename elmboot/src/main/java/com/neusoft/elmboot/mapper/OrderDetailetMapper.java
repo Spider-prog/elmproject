@@ -11,5 +11,5 @@ public interface OrderDetailetMapper {
 
 	public int saveOrderDetailetBatch(List<OrderDetailet> list);
 	
-	public List<OrderDetailet> listOrderDetailetByOrderId(Integer orderOd);
+	public List<OrderDetailet> listOrderDetailetByOrderId(Integer orderId);
 }

@@ -7,4 +7,5 @@ import com.neusoft.elmboot.po.Food;
 public interface FoodService {
 
 	public List<Food> listFoodByBusinessId(Integer businessId);
+	public int getQuantityByFoodId(String foodId);
 }
