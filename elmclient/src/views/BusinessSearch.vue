@@ -32,7 +32,7 @@
 		name: 'BusinessSearch',
 		data() {
 			return {
-				businessName: this.$route.query.orderTypeId,
+				businessOrFoodName: this.$route.query.orderTypeId,
 				businessArr: [],
 				user: {}
 			}
@@ -40,7 +40,7 @@
 		created() {
 			this.user = this.$getSessionStorage('user');
 			this.$axios.post('QueryController/listBusinessByBusinessName', this.$qs.stringify({
-				businessOrFoodName: this.businessName
+				businessOrFoodName: this.businessOrFoodName
 			})).then(response => {
 				this.businessArr = response.data;
 				if (this.user != null) {
@@ -51,7 +51,7 @@
 			});
 			//test下面仅用于测试
 			// this.$axios.post('BusinessController/listBusinessByOrderTypeId',this.$qs.stringify({
-			// 	orderTypeId:this.businessName
+			// 	orderTypeId:this.businessOrFoodName
 			// })).then(response=>{//响应成功
 			// 	this.businessArr = response.data;
 			// 	if(this.user!=null){//判断是否登录

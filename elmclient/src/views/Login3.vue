@@ -3,7 +3,7 @@
 
 		<!-- header部分 -->
 		<header>
-			<p>用户登陆</p>
+			<p>支付登录</p>
 		</header>
 
 		<!-- 表单部分 -->
@@ -15,25 +15,24 @@
 				<div class="content">
 					<!--<input type="text" v-model="userId" placeholder="手机号码"> -->
 					<!--表单提交用v-model实现双向数据绑定-->
-					<input type="text" v-model="userId" placeholder="手机号码" :disabled="isLoggingIn" pattern="^1[358][0-9]{9}$" maxlength="11">
+					<input type="text" v-model="userId" placeholder="手机号码" :disabled="isLoggingIn" pattern="^1[358][0-9]{9}$"
+					 maxlength="11">
 				</div>
 			</li>
 			<li>
 				<div class="title">
-					密码：
+					钱包密码：
 				</div>
 				<div class="content">
 					<!--<input type="password" v-model="password" placeholder="密码">-->
-					<input type="password" v-model="password" placeholder="密码" :disabled="isLoggingIn" pattern="[A-Za-z0-9]{6,}" title="密码需包含且只能包含大、小写字母和数字，长度至少为6位">
+					<input type="password" v-model="walletPassword" placeholder="密码" :disabled="isLoggingIn" pattern="[A-Za-z0-9]{6,}"
+					 title="密码需包含且只能包含大、小写字母和数字，长度至少为6位">
 				</div>
 			</li>
 		</ul>
 
 		<div class="button-login">
-			<button @click="login">登陆</button>
-		</div>
-		<div class="button-register">
-			<button @click="register">去注册</button>
+			<button @click="login">确认支付</button>
 		</div>
 
 		<!-- 底部菜单部分 -->
@@ -43,68 +42,76 @@
 
 <script>
 	import Footer from '../components/Footer.vue';
-	import md5 from 'js-md5';  
 
 	export default {
-		name: 'Login',
+		name: 'Login3',
 		data() {
 			return {
 				userId: '',
-				password: '', //传入两个字符串类型
-				isLoggingIn: false
+				walletPassword: '', //传入两个字符串类型
+				isLoggingIn: false,
+				orderId: this.$route.query.orderId,
+				str: ''
 			}
 		},
 		methods: {
 			login() {
-				// //对手机号账号和密码进行前端验证
-				// if (!/^1[358][0-9]{9}$/.test(this.userId)) {
-				// 	alert('请输入正确的手机号!');
-				// 	return;
-				// }
-				// if (!/^[A-Za-z0-9]{6,}$/.test(this.password)) {
-				// 	alert('密码需包含且只能包含大、小写字母和数字，长度至少为6位！');
-				// 	return;
-				// }
 				//表单验证，手机号码和密码不能为空
 				if (this.userId == '') {
 					alert('手机号码不能为空！'); //alert()方法是显示一条弹出提示消息和确认按钮的警告框
 					return;
 				}
-				if (this.password == '') {
+				if (this.walletPassword == '') {
 					alert('密码不能为空！');
 					return;
 				}
 
 				this.isLoggingIn = true; // 禁用登录按钮，防止重复提交
-				//this.password = md5(this.password.toString());
 
 				//登录请求
-				this.$axios.post('UserController/getUserByIdByPass', this.$qs.stringify({
+				this.$axios.post('UserWalletController/getUserByIdByPass', this.$qs.stringify({
 					userId: this.userId,
-					password: this.password
+					walletPassword: this.walletPassword
 				})).then(response => {
-					console.log(response.data);
-					console.log(response.headers.Authorization);
-					//console.log(response.headers['Authorization']);
-					//this.$setLocalStorage('accessToken','eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0aW1lU3RhbXAiOjE3MjYxNTgyMDA4MzEsInVzZXJJZCI6IjExMTExMTExMTExIn0.DSCxy5Y19xoxA_BQ4At13d31vETDFJmw-6agC7ctioU');
-					let user = response.data;
-					if (user == null) { //查询完看是否返回了user对象
+					let userWallet = response.data;
+					if (userWallet == null) {
 						alert('用户名或密码不正确！');
 					} else {
-						//this.$setLocalStorage('accessToken',response.data.headers.Authorization);
-						//user.userImg = ''; //sessionstorage有容量限制，为了防止数据溢出将Img置空
-						this.$setSessionStorage('user', user); //将键值对放进sessionstorage中
-						this.$router.go(-1); //从哪来回哪去，回退到上一个页面（这个功能很棒）
+						this.$setSessionStorage('userWallet', userWallet);
+						this.$axios.post('PayController/getOrdersById', this.$qs.stringify({
+							userId: this.userId,
+							orderId: this.orderId
+						})).then(response => {
+							this.str = response.data;
+							if (str == 'Paid') {
+								alert('Paid');
+								this.$router.push('/success');
+							}
+							if (str == 'UnPaid') {
+								alert('UnPaid');
+								this.$router.go(-1);
+							}
+							if (str == 'Cancelled') {
+								alert('Cancelled');
+								this.$router.go(-1);
+							}
+							if (str == 'Inadequate Money') {
+								alert('Inadequate Money');
+								this.$router.go(-1);
+							}
+							if (str == 'Pay Successfully') {
+								alert('Pay Successfully');
+								this.$router.go(-1);
+							}
+						}).catch(error => {
+							console.error(error);
+						});
+
 					}
 				}).catch(error => {
 					console.error(error);
 				}).finally(() => {
-					this.isLoggingIn = false; // 重新启用登录按钮
-				});
-			},
-			register() {
-				this.$router.push({
-					path: '/register'
+					this.isLoggingIn = false;
 				});
 			}
 		},

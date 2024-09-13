@@ -4,7 +4,7 @@
 			<i class="fa fa-home"></i>
 			<p>首页</p>
 		</li>
-		<li>
+		<li @click="tosuccess">
 			<i class="fa fa-compass"></i>
 			<p>发现</p>
 		</li>
@@ -31,6 +31,9 @@
 			this.user = this.$getSessionStorage('user');
 		},
 		methods:{
+			tosuccess(){
+				// this.$router.push({path:'/mybusinessinfo'});
+			},
 			toIndex(){
 				this.$router.push({path:'/index'});
 			},

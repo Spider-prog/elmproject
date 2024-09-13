@@ -3,7 +3,7 @@
 
 		<!-- header部分 -->
 		<header>
-			<p>用户注册</p>
+			<p>钱包注册</p>
 		</header>
 
 		<!-- 表单部分 -->
@@ -13,15 +13,15 @@
 					手机号码：
 				</div>
 				<div class="content">
-					<input type="text" @blur="checkUserId" v-model="user.userId" placeholder="手机号码">
+					<input type="text" v-model="userWallet.userId" placeholder="手机号码">
 				</div>
 			</li>
 			<li>
 				<div class="title">
-					密码：
+					钱包密码：
 				</div>
 				<div class="content">
-					<input type="password" v-model="user.password" placeholder="密码">
+					<input type="password" v-model="userWallet.password" placeholder="密码">
 				</div>
 			</li>
 			<li>
@@ -30,23 +30,6 @@
 				</div>
 				<div class="content">
 					<input type="password" v-model="confirmPassword" placeholder="确认密码">
-				</div>
-			</li>
-			<li>
-				<div class="title">
-					用户名称：
-				</div>
-				<div class="content">
-					<input type="text" v-model="user.userName" placeholder="用户名称">
-				</div>
-			</li>
-			<li>
-				<div class="title">
-					性别：
-				</div>
-				<div class="content" style="font-size: 3vw;">
-					<input type="radio" v-model="user.userSex" value="1" style="width:6vw;height: 3.2vw;">男
-					<input type="radio" v-model="user.userSex" value="0" style="width:6vw;height: 3.2vw;">女
 				</div>
 			</li>
 		</ul>
@@ -62,60 +45,34 @@
 
 <script>
 	import Footer from '../components/Footer.vue';
-	import md5 from 'js-md5';  
-
 	export default {
-		name: 'Register',
+		name: 'Register2',
 		data() {
 			return {
-				user:{
+				userWallet:{
 					userId:'',
 					password:'',
-					userName:'',
-					userSex:1
+					credit:0
 				},
 				confirmPassword:''
 			}
 		},
 		methods: {
-			checkUserId(){
-				this.$axios.post('UserController/getUserById', this.$qs.stringify({
-					userId: this.user.userId,
-				})).then(response => {
-					if(response.data==1){
-						this.user.userId = '';
-						alert('此手机号码已存在！')
-					}
-				}).catch(error => {
-					console.error(error);
-				});
-			},
 			register() {
-				if (this.user.userId == '') {
+				if (this.userWallet.userId == '') {
 					alert('手机号码不能为空！');
 					return;
 				}
-				if (this.user.password == '') {
+				if (this.userWallet.password == '') {
 					alert('密码不能为空！');
 					return;
 				}
-				if (this.user.password != this.confirmPassword) {
+				if (this.userWallet.password != this.confirmPassword) {
 					alert('两次输入的密码不一致！');
 					return;
 				}
-				if (this.user.userName == '') {
-					alert('用户名不能为空！');
-					return;
-				}
-				// //注册请求
-				// const md5:any = new Md5()
-				// md5.appendAsciiStr(this.user.password)
-				// this.user.password = md5.end()
-				// console.log('加密密码：',this.user.password);
-				// this.confirmPassword = md5(this.confirmPassword.toString());
-				// this.user.password = md5(this.user.password.toString());
-				this.$axios.post('UserController/saveUser', this.$qs.stringify(
-					this.user
+				this.$axios.post('UserWalletController/saveUser', this.$qs.stringify(
+					this.userWallet
 				)).then(response => {
 					if(response.data>0){
 						alert('注册成功！');

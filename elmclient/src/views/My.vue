@@ -35,8 +35,8 @@
 
 				</li>
 				<li @click="toMyCredit">
-					<img src="../assets/collect.png">
-					<p>我的收藏</p>
+					<img src="../assets/dianpu.png">
+					<p>我的店铺</p>
 
 				</li>
 			</ul>

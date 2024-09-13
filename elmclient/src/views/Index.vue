@@ -17,8 +17,8 @@
 			<div class="search-fixed-top" ref="fixedBox">
 				<!-- 搜索框部分中间的白框 -->
 				<div class="search-box">
-					<i class="fa fa-search" @click="toBusinessSearch(businessName)"></i>
-					<input type="text" v-model="businessName" placeholder="搜索饿了么商家、商品名称">
+					<i class="fa fa-search" @click="toBusinessSearch(businessOrFoodName)"></i>
+					<input type="text" v-model="businessOrFoodName" placeholder="搜索饿了么商家、商品名称">
 					<!--<i class="fa fa-search"></i>搜索饿了么商家、商品名称-->
 				</div>
 			</div>
@@ -342,6 +342,11 @@
 
 	export default {
 		name: 'Index',
+		data () {
+			return {
+				businessOrFoodName: ''
+			}
+		},		
 		mounted() {
 			document.onscroll = () => {
 				//获取滚动条位置
@@ -384,11 +389,11 @@
 					}
 				});
 			},
-			toBusinessSearch(orderTypeId) {
+			toBusinessSearch(businessOrFoodName) {
 				this.$router.push({
 					path: '/businessSearch',
 					query: {
-						orderTypeId: orderTypeId
+						businessOrFoodName: businessOrFoodName
 					}
 				});
 			},

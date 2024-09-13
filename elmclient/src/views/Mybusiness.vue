@@ -4,7 +4,7 @@
 		<!-- header部分 -->
 		<header>
 			<div class="go-back"><i class="fa fa-reply" @click="goback"></i></div>
-			<p>商家列表</p>
+			<p>我的商家</p>
 		</header>
 
 		<!-- 商家列表部分 -->
@@ -12,7 +12,6 @@
 			<li v-for="item in businessArr" @click="toBusinessInfo(item.businessId)">
 				<div class="business-img">
 					<img :src="item.businessImg">
-					<div class="business-img-quantity" v-show="item.quantity>0">{{item.quantity}}</div><!--右上角小红标-->
 				</div>
 				<div class="business-info">
 					<h3>{{item.businessName}}</h3>
@@ -21,8 +20,6 @@
 				</div>
 			</li>
 		</ul>
-        
-		<div class="whiteblock"></div>
 		
 		<!-- 底部菜单部分 -->
 		<Footer></Footer>
@@ -34,10 +31,9 @@
 	import Footer from '../components/Footer.vue';
 	
 	export default{
-		name:'BusinessList',
+		name:'Mybusiness',
 		data(){
 			return {
-				orderTypeId: this.$route.query.orderTypeId,//获取主页传来的参数
 				businessArr:[],//数组类型
 				user:{}
 			}
@@ -46,8 +42,8 @@
 			this.user = this.$getSessionStorage('user');
 			
 			//根据orderTypeId查询商家信息，第一个填接口，第二个填请求参数，将JSON格式的键值对转换成qs传给服务器
-			this.$axios.post('BusinessController/listBusinessByOrderTypeId',this.$qs.stringify({
-				orderTypeId:this.orderTypeId
+			this.$axios.post('UserBusinessController/getBusinessByUserId',this.$qs.stringify({
+				userId: this.user.userId
 			})).then(response=>{//响应成功
 				this.businessArr = response.data;
 				if(this.user!=null){//判断是否登录
@@ -60,28 +56,9 @@
 		components:{
 			Footer
 		},
-		methods:{
-			listCart(){
-				this.$axios.post('CartController/listCart',this.$qs.stringify({
-					userId:this.user.userId
-				})).then(response=>{
-					let cartArr = response.data;
-					//遍历所有食品列表
-					for(let businessItem of this.businessArr){
-						businessItem.quantity = 0;
-						for(let cartItem of cartArr){
-							if(cartItem.businessId==businessItem.businessId){
-								businessItem.quantity += cartItem.quantity;
-							}
-						}
-					}
-					//this.businessArr.sort();
-				}).catch(error=>{
-					console.error(error);
-				});
-			},
+		methods:{	
 			toBusinessInfo(businessId){//跳转商家详细页面
-				this.$router.push({path:'/businessInfo',query:{businessId:businessId}});
+				this.$router.push({path:'/mybusinessinfo',query:{businessId:businessId}});
 			},
 			goback(){
 				this.$router.go(-1);

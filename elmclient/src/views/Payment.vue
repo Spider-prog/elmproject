@@ -40,7 +40,7 @@
 			</li>
 		</ul>
 		<div class="payment-button">
-			<button>确认支付</button>
+			<button @click="topay">确认支付</button>
 		</div>
 
 		<!-- 底部菜单部分 -->
@@ -86,6 +86,14 @@
 		methods:{
 			detailetShow(){
 				this.isShowDetailet = !this.isShowDetailet;
+			},
+			topay() {
+				this.$router.push({
+					path: '/login3',
+					query: {
+						orderId: this.orderId
+					}
+				});
 			},
 			goback(){
 				this.$router.go(-1);

@@ -1,4 +1,4 @@
-package com.neusoft.elmboot.config;
+package com.neusoft.elmboot;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

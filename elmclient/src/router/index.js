@@ -22,6 +22,12 @@ import MyWallet from '../views/MyWallet.vue'
 import ChangePwd from '../views/ChangePwd.vue'
 import MyImg from '../views/MyImg.vue'
 import OpenPage from '../views/OpenPage.vue'
+import Register2 from '../views/Register2.vue'
+import Login2 from '../views/Login2.vue'
+import Success from '../views/Success.vue'
+import Login3 from '../views/Login3.vue'
+import Mybusiness from '../views/Mybusiness.vue'
+import Mybusinessinfo from '../views/Mybusinessinfo.vue'
 //Vue.use(VueRouter)
 
 const routes = [{
@@ -32,10 +38,6 @@ const routes = [{
 		path: '/',
 		name: 'Home',
 		component: OpenPage
-	}, {
-		path: '/index',
-		name: 'Index',
-		component: Index
 	}, {
 		path: '/businessList',
 		name: 'BusinessList',
@@ -53,6 +55,14 @@ const routes = [{
 		name: 'Login',
 		component: Login
 	}, {
+		path: '/login2',
+		name: 'Login2',
+		component: Login2
+	}, {
+		path: '/login3',
+		name: 'Login3',
+		component: Login3
+	},{
 		path: '/orders',
 		name: 'Orders',
 		component: Orders
@@ -85,6 +95,10 @@ const routes = [{
 		name: 'Register',
 		component: Register
 	}, {
+		path: '/register2',
+		name: 'Register2',
+		component: Register2
+	}, {
 		path: '/my',
 		name: 'My',
 		component: My
@@ -104,6 +118,18 @@ const routes = [{
 		path: '/myImg',
 		name: 'MyImg',
 		component: MyImg
+	}, {
+		path: '/success',
+		name: 'Success',
+		component: Success
+	}, {
+		path: '/mybusiness',
+		name: 'Mybusiness',
+		component: Mybusiness
+	}, {
+		path: '/mybusinessinfo',
+		name: 'Mybusinessinfo',
+		component: Mybusinessinfo
 	}
 ]
 
